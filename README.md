@@ -1,10 +1,9 @@
 # Search Engine
 
-## Development
+## Start up
 
 ```sh
 ./tools/start-docker-machine.sh
-eval $(docker-machine env docker-host)
 ```
 
 ## Start services via `docker-compose`
@@ -15,3 +14,9 @@ docker-compose up -d
 ```
 
 > Don't forget to add ports from `docker/.env` file to firewall in GCP.
+
+## Tear down project
+
+```sh
+./tools/stop-docker-machine.sh
+```
