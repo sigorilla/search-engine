@@ -5,6 +5,9 @@
 Бот помещает в очередь `url` переданный ему при запуске. Затем он начинает обрабатывать все `url` в очереди. Для каждого `url` бот загружает содержимое страницы, записывая в БД связи между сайтами, между сайтами и словами. Все найденые на странице `url` помещает обратно в очередь.
 
 ## Необходимые компоненты
+
+* Python 3
+
 Для запуска бота нужно установить дополнительные компоненты python командой
 ```
 pip install -r requirements.txt
@@ -45,15 +48,15 @@ EXCLUDE_URLS='.*github.com' python -u crawler/crawler.py https://vitkhab.github.
 pip install -r requirements.txt -r requirements-test.txt
 ```
 
-### Тестирование 
+### Тестирование
 Базовая команда для запуска unit-тестов
 ```
-python -m unittest discover -s tests/ 
+python -m unittest discover -s tests/
 ```
 
 Команды для генерации отчета о покрытии кода тестами
 ```
-coverage run -m unittest discover -s tests/ 
+coverage run -m unittest discover -s tests/
 coverage report --include crawler/crawler.py
 ```
 

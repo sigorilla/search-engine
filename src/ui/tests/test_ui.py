@@ -19,6 +19,6 @@ class TestWebUI(unittest.TestCase):
     def test_empty_db(self):
         rv = self.app.get('/')
         assert b'Best search engine ever' in rv.data
-    
+
 if __name__ == '__main__':
     unittest.main()
