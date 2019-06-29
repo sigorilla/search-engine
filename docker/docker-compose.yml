@@ -1,0 +1,47 @@
+version: '3.3'
+
+services:
+  db:
+    image: mongo:3.2
+    volumes:
+      - db:/data/db
+    networks:
+      db_net:
+        aliases:
+          - db_host
+
+  queue:
+    image: rabbitmq:3.7.15
+    volumes:
+      - queue:/var/lib/rabbitmq
+    networks:
+      queue_net:
+        aliases:
+          - queue_host
+
+  crawler:
+    build: ../src/crawler
+    ports:
+      - ${CRAWLER_PORT}:8000/tcp
+    networks:
+      - db_net
+      - queue_net
+    environment:
+      - CRAWLER_URL=${CRAWLER_URL}
+
+  ui:
+    build: ../src/ui
+    ports:
+      - ${UI_PORT}:8000/tcp
+    networks:
+      - db_net
+      - ui_net
+
+volumes:
+  db:
+  queue:
+
+networks:
+  ui_net:
+  db_net:
+  queue_net:
