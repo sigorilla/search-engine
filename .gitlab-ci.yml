@@ -1,0 +1,34 @@
+image: python:3.7
+
+variables:
+  PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+
+cache:
+  paths:
+    - .cache/pip
+    - .venv/
+
+before_script:
+  - python -V
+  - pip install virtualenv
+  - virtualenv .venv
+  - source .venv/bin/activate
+
+stages:
+  - test
+
+test:crawler:
+  stage: test
+  script:
+    - cd src/crawler
+    - pip install -r requirements.txt -r requirements-test.txt
+    - coverage run -m unittest discover -s ./tests/
+    - coverage report ./crawler/*.py
+
+test:ui:
+  stage: test
+  script:
+    - cd src/ui
+    - pip install -r requirements.txt -r requirements-test.txt
+    - coverage run -m unittest discover -s ./tests/
+    - coverage report ./ui/*.py
