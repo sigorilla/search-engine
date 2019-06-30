@@ -19,18 +19,16 @@ stages:
 
 test:crawler:
   stage: test
-  before_script:
+  script:
     - cd src/crawler
     - pip install -r requirements.txt -r requirements-test.txt
-  script:
     - coverage run -m unittest discover -s ./tests/
     - coverage report ./crawler/*.py
 
 test:ui:
   stage: test
-  before_script:
+  script:
     - cd src/ui
     - pip install -r requirements.txt -r requirements-test.txt
-  script:
     - coverage run -m unittest discover -s ./tests/
     - coverage report ./ui/*.py
