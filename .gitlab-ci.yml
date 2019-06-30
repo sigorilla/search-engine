@@ -20,7 +20,7 @@ stages:
   - test
   - build
 
-test:crawler:
+.test:crawler:
   stage: test
   script:
     - cd src/crawler
@@ -28,7 +28,7 @@ test:crawler:
     - coverage run -m unittest discover -s ./tests/
     - coverage report ./crawler/*.py
 
-test:ui:
+.test:ui:
   stage: test
   script:
     - cd src/ui
@@ -45,6 +45,7 @@ build:
     DOCKER_HOST: tcp://docker:2375
     DOCKER_DRIVER: overlay2
   before_script:
+    - apk add --update py-pip
     - pip install docker-compose
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
