@@ -15,7 +15,6 @@ before_script:
   - pip install virtualenv
   - virtualenv .venv
   - source .venv/bin/activate
-  - pip install docker-compose
 
 stages:
   - test
@@ -42,6 +41,9 @@ build:
   image: docker:stable
   services:
     - docker:dind
+  before_script:
+    - apk add --update py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+    - pip install docker-compose
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker-compose -f docker/docker-compose.yml build
