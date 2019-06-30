@@ -47,4 +47,4 @@ build:
   script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker-compose -f docker/docker-compose.yml build
-    - docker-compose push crawler ui
+    - docker-compose -f docker/docker-compose.yml push crawler ui
