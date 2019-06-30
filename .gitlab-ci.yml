@@ -16,6 +16,7 @@ before_script:
 
 stages:
   - test
+  - build
 
 test:crawler:
   stage: test
@@ -32,3 +33,15 @@ test:ui:
     - pip install -r requirements.txt -r requirements-test.txt
     - coverage run -m unittest discover -s ./tests/
     - coverage report ./ui/*.py
+
+build:
+  stage: build
+  services:
+    - docker
+  before_script:
+    - docker -v
+    - docker-compose -v
+    - echo "login to docker.io via env variable"
+  script:
+    - cd docker
+    - docker-compose -f docker-compose.yml config
