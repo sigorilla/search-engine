@@ -2,6 +2,9 @@ image: python:3.7
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
+  REGISTRY: $CI_REGISTRY
+  CRAWLER_TAG: $CI_COMMIT_SHORT_SHA
+  UI_TAG: $CI_COMMIT_SHORT_SHA
 
 cache:
   paths:
@@ -16,6 +19,7 @@ before_script:
 
 stages:
   - test
+  - build
 
 test:crawler:
   stage: test
@@ -32,3 +36,16 @@ test:ui:
     - pip install -r requirements.txt -r requirements-test.txt
     - coverage run -m unittest discover -s ./tests/
     - coverage report ./ui/*.py
+
+build:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    - apk add --update py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
+    - pip install docker-compose
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker-compose -f docker/docker-compose.yml build
+    - docker-compose -f docker/docker-compose.yml push crawler ui

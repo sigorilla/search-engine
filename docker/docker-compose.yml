@@ -20,9 +20,10 @@ services:
           - queue_host
 
   crawler:
+    image: ${REGISTRY}/sigorilla/search-engine/crawler:${CRAWLER_TAG:-latest}
     build: ../src/crawler
     ports:
-      - ${CRAWLER_PORT}:8000/tcp
+      - ${CRAWLER_PORT:-8000}:8000/tcp
     networks:
       - db_net
       - queue_net
@@ -30,9 +31,10 @@ services:
       - CRAWLER_URL=${CRAWLER_URL}
 
   ui:
+    image: ${REGISTRY}/sigorilla/search-engine/ui:${UI_TAG:-latest}
     build: ../src/ui
     ports:
-      - ${UI_PORT}:8000/tcp
+      - ${UI_PORT:-8080}:8000/tcp
     networks:
       - db_net
       - ui_net
