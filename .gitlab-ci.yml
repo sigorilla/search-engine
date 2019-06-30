@@ -36,12 +36,17 @@ test:ui:
 
 build:
   stage: build
+  image: docker:stable
   services:
-    - docker
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
   before_script:
-    - docker -v
+    - env
+    - docker info
     - docker-compose -v
-    - echo "login to docker.io via env variable"
   script:
-    - cd docker
-    - docker-compose -f docker-compose.yml config
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # - docker build -t $CI_REGISTRY/group/project/image:latest .
+    # - docker push $CI_REGISTRY/group/project/image:latest
