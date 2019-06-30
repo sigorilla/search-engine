@@ -1,5 +1,8 @@
 # Search Engine
 
+[![pipeline status](https://gitlab.com/sigorilla/search-engine/badges/master/pipeline.svg)](https://gitlab.com/sigorilla/search-engine/commits/master)
+[![coverage report](https://gitlab.com/sigorilla/search-engine/badges/master/coverage.svg)](https://gitlab.com/sigorilla/search-engine/commits/master)
+
 ## Start up
 
 ```sh
