@@ -1,4 +1,4 @@
-image: python:3.7
+image: alpine:latest
 
 variables:
   PIP_CACHE_DIR: "$CI_PROJECT_DIR/.cache/pip"
@@ -6,22 +6,25 @@ variables:
   CRAWLER_TAG: $CI_COMMIT_SHORT_SHA
   UI_TAG: $CI_COMMIT_SHORT_SHA
 
-cache:
-  paths:
-    - .cache/pip
-    - .venv/
-
-before_script:
-  - python -V
-  - pip install virtualenv
-  - virtualenv .venv
-  - source .venv/bin/activate
-
 stages:
   - test
   - build
+  - staging
+
+.test_template: &test_template
+  image: python:3.7
+  before_script:
+    - python -V
+    - pip install virtualenv
+    - virtualenv .venv
+    - source .venv/bin/activate
+  cache:
+    paths:
+      - .cache/pip
+      - .venv/
 
 test:crawler:
+  <<: *test_template
   stage: test
   script:
     - cd src/crawler
@@ -30,6 +33,7 @@ test:crawler:
     - coverage report ./crawler/*.py
 
 test:ui:
+  <<: *test_template
   stage: test
   script:
     - cd src/ui
@@ -43,9 +47,19 @@ build:
   services:
     - docker:dind
   before_script:
+    # Dependencies for docker-compose.
     - apk add --update py-pip python-dev libffi-dev openssl-dev gcc libc-dev make
     - pip install docker-compose
-  script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
     - docker-compose -f docker/docker-compose.yml build
     - docker-compose -f docker/docker-compose.yml push crawler ui
+  # TODO
+  only:
+    - master
+
+deploy:testing:
+  stage: staging
+  script: echo "Deploy"
+  only:
+    - master
